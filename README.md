@@ -13,7 +13,5 @@ import PlateViewer from 'plate-viewer-vue'
 
 Vue.use(PlateViewer)
 
-then you can use
-
-<PlateViewer/> component in the page.
+then you can use 'PlateViewer' component in the page.
 
