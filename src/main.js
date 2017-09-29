@@ -1,7 +1,7 @@
-import TestComp from './TestComp.vue'
+import PlateViewer from './PlateViewer.vue'
 
 const components = [
-  TestComp
+  PlateViewer
 ];
 
 export default function (Vue) {
@@ -9,5 +9,4 @@ export default function (Vue) {
     console.log(component.name, component)
     Vue.component(component.name, component)
   });
-  // Vue.component('TestComp', TestComp)
 }

@@ -1,6 +1,6 @@
 {
   "name": "plate-viewer-vue",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A vue component of viewing plates of synthetic biology.",
   "main": "src/main.js",
   "scripts": {
