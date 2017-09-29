@@ -1,0 +1,23 @@
+{
+  "name": "plate-viewer-vue",
+  "version": "0.0.1",
+  "description": "A vue component of viewing plates of synthetic biology.",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IsaacLuo/plate-viewer-vue.git"
+  },
+  "keywords": [
+    "plate",
+    "viewer"
+  ],
+  "author": "IsaacLuo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IsaacLuo/plate-viewer-vue/issues"
+  },
+  "homepage": "https://github.com/IsaacLuo/plate-viewer-vue#readme"
+}
