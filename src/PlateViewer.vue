@@ -4,6 +4,7 @@
       v-bind:width='width+200'
       v-bind:height='height+200'
       transform="translate(100,100)"
+      v-on:mousemove="onMouseMove"
     )
       g
         rect.plate-viewer-border(
@@ -16,14 +17,14 @@
         g.plate-viewer-index(
           :style="finalIndexStyle"
         )
-          text(
+          text.plate-viewer-row-index(
             v-for="i in rows"
             :x='rowIndexPosX(i)'
             :y='rowIndexPosY(i)'
             :text-anchor="'end'"
             :alignment-baseline="'middle'"
           ) {{String.fromCharCode(64+i)}}
-          text(
+          text.plate-viewer-col-index(
             v-for="i in columns"
             :x='columnIndexPosX(i)'
             :y='columnIndexPosY(i)'
@@ -41,12 +42,39 @@
               :transform="`translate(${(j-1)*columnIndexSpan + columnIndexSpan/2}, 0)`"
             )
               ellipse.plate-viewer-well(
-                :rx="wellRadius * finalWellStyle(i,j).scale"
-                :ry="wellRadius * finalWellStyle(i,j).scale"
+                :rx="wellRadius * finalBaseWellStyle.scale"
+                :ry="wellRadius * finalBaseWellStyle.scale"
                 :cx="0"
                 :cy="0"
-                :style="finalWellStyle(i,j)"
+                :style="finalWellStyle(i-1,j-1)"
+                v-on:click="onClickWell"
+                :data-row="(i-1)"
+                :data-col="(j-1)"
+                :data-well-name="wellName(i-1,j-1)"
+                v-on:mouseenter="onMouseEnterWell(i-1, j-1)"
+                v-on:mouseleave="showTooltip=false"
               )
+        g(
+          :transform="`translate(${tooltipX}, ${tooltipY})`"
+          v-if="showTooltip"
+        )
+          //- rect.tooltip-rect(
+          //-   :x="0"
+          //-   :y="0"
+          //-   :width="tooltipWidth"
+          //-   :height="tooltipHeight"
+          //- )
+          //- text(
+          //-   :alignment-baseline="'before-edge'"
+          //- ) {{wellToolTip(i-1, j-1)}}
+                //- title.plate-viewer-well-title {{wellToolTip(i-1, j-1)}}
+          foreignObject(
+            :width="tooltipWidth"
+            :height="tooltipHeight"
+          )
+            div.tooltip
+              .tooltipHeader {{tooltipHeader}}
+              .tooltipText {{tooltipText}}
 </template>
 
 <script>
@@ -56,27 +84,26 @@ export default {
     return {
       msg: 'plate viewer',
       defaultIndexStyle: {
-        fill: '#00aa00',
-        fontSize: '20px',
-        align: 15,
+        align: 0,
       },
       defaultBorderStyle: {
-        stroke: '#009900',
-        strokeWidth: 1,
-        fill: 'none',
         padding: 15,
       },
       defaultWellStyle: {
-        stroke: '#009900',
-        strokeWidth: 1,
         scale: 0.7,
-        fill: '#fff',
       },
       defaultWellDataStyleDict: {
         correct: 'green',
         wrong: 'red',
         undefined: 'white',
       },
+      mouseX: 0,
+      mouseY: 0,
+      showTooltip: false,
+      tooltipWidth: 150,
+      tooltipHeight: 75,
+      tooltipText: '',
+      tooltipHeader: '',
     }
   },
   computed: {
@@ -135,6 +162,34 @@ export default {
     finalWellDataStyleDict () {
       return {...this.defaultWellDataStyleDict, ...this.wellDataStyleDict}
     },
+    finalBaseWellStyle () {
+      return {...this.defaultWellStyle, ...this.wellStyle}
+    },
+    wellToolTipDict () {
+      let ret = {}
+      console.log(this.wellInfo)
+      for (let i in this.wellInfo) {
+        let rowLetter = i.match(/^[A-z]/)[0]
+        let colLetter = i.match(/\d+$/)[0]
+        let row = rowLetter.charCodeAt(0) - 65
+        if (row >= 32) row -= 32
+        let col = parseInt(colLetter) - 1
+        let realIndex = row * 12 + col
+        ret[realIndex.toString()] = this.wellInfo[i]
+      }
+      console.log(ret)
+      return ret
+    },
+    tooltipX () {
+      if (this.mouseX > this.width - this.tooltipWidth) {
+        return this.mouseX - this.tooltipWidth - 10
+      } else return this.mouseX + 10
+    },
+    tooltipY () {
+      if (this.mouseY > this.height - this.tooltipHeight) {
+        return this.mouseY - this.tooltipHeight - 20
+      } else return this.mouseY + 20
+    },
   },
   methods: {
     columnIndexPosX (index) {
@@ -149,10 +204,41 @@ export default {
     rowIndexPosX (index) {
       return this.borderStartX - this.finalIndexStyle.align
     },
+
     finalWellStyle (i, j) {
-      let fill = this.finalWellDataStyleDict[this.wellDataStyle[(i - 1) * this.columns + (j - 1)]]
-      return {...this.defaultWellStyle, ...this.wellStyle, fill}
+      let customFunctionResult = this.onRenderWellStyle(this.wellName(i, j))
+      if (customFunctionResult) {
+        return {...this.finalBaseWellStyle, ...customFunctionResult}
+      } else {
+        let fill = this.finalWellDataStyleDict[this.wellDataStyle[(i) * this.columns + (j)]]
+        return {...this.finalBaseWellStyle, fill}
+      }
     },
+    wellName (row, col) {
+      let ret = String.fromCharCode(65 + row)
+      ret += (col + 1)
+      return ret
+    },
+    onClickWell (event) {
+      const wellName = event.target.dataset.wellName
+      this.$emit('clickWell', wellName)
+    },
+    wellToolTip (row, col) {
+      let ret = ''
+      let info = this.wellToolTipDict[row * this.columns + col]
+      if (info) ret += info
+      return ret
+    },
+    onMouseMove (event) {
+      console.log(event.offsetX, event.offsetY)
+      this.mouseX = event.offsetX
+      this.mouseY = event.offsetY
+    },
+    onMouseEnterWell (row, col) {
+      this.showTooltip = true
+      this.tooltipHeader = this.wellName(row, col)
+      this.tooltipText = this.wellToolTip(row, col)
+    }
   },
   props: {
     width: {
@@ -218,11 +304,72 @@ export default {
         }
       },
     },
+    onRenderWellStyle: {
+      type: Function,
+      default (data, row, col) {
+
+      }
+    },
+
+    wellInfo: {
+      type: Object,
+      default () {
+        return {}
+      }
+    },
   },
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
+.plate-viewer-index
+{
+  text
+  {
+    fill: #00aa00;
+    font-size: 20px;
+  }
+  text.plate-viewer-row-index
+  {
+    margin-right:15px;
+  }
+  text.plate-viewer-col-index
+  {
+    margin-bottom:15px;
+  }
+}
+.plate-viewer-border
+{
+  stroke: #009900;
+  stroke-width: 1;
+  fill: none;
+}
+.plate-viewer-well
+{
+  stroke: #009900;
+  stroke-width: 1;
+  fill: #fff;
+  cursor: pointer;
 
+}
+
+.plate-viewer-well-title
+{
+  fill: #009900;
+}
+
+.tooltip-rect
+{
+  fill: yellow;
+  stroke:black;
+  stroke-width:1;
+}
+div.tooltip
+{
+  background: yellow;
+  border: solid 1px;
+  word-break: break-all;
+  overflow: hidden;
+}
 </style>
