@@ -1,0 +1,25 @@
+{
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": ["last 2 Chrome versions"]
+        },
+        "modules": false
+      }
+    ]
+  ],
+  "plugins": [
+    // "transform-runtime",
+    "transform-object-rest-spread",
+    "external-helpers"
+  ],
+  // "plugins": ["external-helpers"],
+  "comments": false
+  // "env": {
+  //   "test": {
+  //     "plugins": [ "istanbul" ]
+  //   }
+  // }
+}
