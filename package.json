@@ -1,6 +1,6 @@
 {
   "name": "plate-viewer-vue",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Slideshow framework for Vue.js",
   "main": "dist/plate-viewer.js",
   "module": "dist/plate-viewer.js",
