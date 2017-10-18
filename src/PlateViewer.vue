@@ -1,10 +1,12 @@
 <template lang='pug'>
   .plate-viewer
     svg.plate-viewer-svg(
-      v-bind:width='width+200'
-      v-bind:height='height+200'
-      transform="translate(100,100)"
+      v-bind:width='width+20'
+      v-bind:height='height+20'
+      transform="translate(10,10)"
       v-on:mousemove="onMouseMove"
+      margin-left="-10"
+      margin-top="-10"
     )
       g
         rect.plate-viewer-border(
@@ -259,11 +261,11 @@ export default {
     },
     indexWidth: {
       type: Number,
-      default: 80,
+      default: 20,
     },
     indexHeight: {
       type: Number,
-      default: 80,
+      default: 20,
     },
     showRowIndex: {
       type: Boolean,

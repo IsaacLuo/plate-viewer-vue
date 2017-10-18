@@ -1,11 +1,11 @@
 {
   "name": "plate-viewer-vue",
-  "version": "0.1.0",
-  "description": "Slideshow framework for Vue.js",
+  "version": "0.1.2",
+  "description": "a vue component which render a SVG graph of a plate of synthetic biology",
   "main": "dist/plate-viewer.js",
   "module": "dist/plate-viewer.js",
   "directories": {
-    "example": "example"
+    "demo": "demo"
   },
   "files": [
     "dist",
@@ -17,15 +17,15 @@
     "presentation",
     "vue.js"
   ],
-  "author": "Zulko",
+  "author": "IsaacLuo",
   "license": "ISC",
   "scripts": {
     "prepublish": "npm run build",
     "build": "node build/build.js"
   },
   "dependencies": {
-    "highlight.js": "9.12.0",
-    "animate.css": "3.5.2"
+    "css-loader": "^0.28.7",
+    "vue-style-loader": "^3.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.22.1",
