@@ -169,7 +169,7 @@ export default {
     },
     wellToolTipDict () {
       let ret = {}
-      console.log(this.wellInfo)
+      // console.log(this.wellInfo)
       for (let i in this.wellInfo) {
         let rowLetter = i.match(/^[A-z]/)[0]
         let colLetter = i.match(/\d+$/)[0]
@@ -179,7 +179,7 @@ export default {
         let realIndex = row * 12 + col
         ret[realIndex.toString()] = this.wellInfo[i]
       }
-      console.log(ret)
+      // console.log(ret)
       return ret
     },
     tooltipX () {
@@ -232,7 +232,7 @@ export default {
       return ret
     },
     onMouseMove (event) {
-      console.log(event.offsetX, event.offsetY)
+      // console.log(event.offsetX, event.offsetY)
       this.mouseX = event.offsetX
       this.mouseY = event.offsetY
     },
