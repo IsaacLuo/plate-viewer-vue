@@ -147,7 +147,7 @@ export default {
           let row = rowLetter.charCodeAt(0) - 65
           if (row >= 32) row -= 32
           let col = parseInt(colLetter) - 1
-          let realIndex = row * 12 + col
+          let realIndex = row * this.columns + col
           ret[realIndex.toString()] = this.wellData[i]
         } else {
           ret[i] = this.wellData[i]
@@ -176,7 +176,7 @@ export default {
         let row = rowLetter.charCodeAt(0) - 65
         if (row >= 32) row -= 32
         let col = parseInt(colLetter) - 1
-        let realIndex = row * 12 + col
+        let realIndex = row * this.columns + col
         ret[realIndex.toString()] = this.wellInfo[i]
       }
       // console.log(ret)

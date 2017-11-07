@@ -1,6 +1,6 @@
 {
   "name": "plate-viewer-vue",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "a vue component which render a SVG graph of a plate of synthetic biology",
   "main": "dist/plate-viewer.js",
   "module": "dist/plate-viewer.js",
